@@ -1,5 +1,7 @@
 package com.example.backjun
 
+import androidx.collection.ArrayMap
+
 /**
  * 입력
  * 첫째줄 N(강의실 개수), M(요청 개수)
@@ -20,38 +22,29 @@ package com.example.backjun
  * 허용한다면 Yes, 아니면 No
  */
 
-fun main(){
-    val (N, M) = readln().split(" ").map{it.toInt()}
-    val listM = ArrayList<ArrayList<Int>>()
-    val result = arrayListOf("YES")
-//    var s = 0
-    var e = listM[0][2] // 첫번재 끝나느 시간
+fun main() {
+    val (N, M) = readln().split(" ").map { it.toInt() }
+    val lastEndTime = mutableMapOf<Int, Int>()
+    val result = mutableListOf<String>()
 
-    repeat(M){
-        val KSEList = ArrayList<Int>(readln().split(" ").map{it.toInt()}.take(3))
-        listM.add(KSEList)
-    }
-    println("list${listM}")
-//    for (i in 1..N){ // 방번호
-//        println("방 ${i}")
-//        for(p in listM.indices){ //0,1,2
-//            result.add("YES")
-//            if(i==listM[p][0]){ // 방번호와 예약 방번호가 같은 리스트들만 뽑겠다
-//                println("p${listM[p]}")
-//                var e = listM[p][2] // 현재 예약건의 끝나는 시간
-//                println(e)
-//                if(e<=listM[p+1][1] || ) {
-//                    result.add("YES") // 예약 끝나는 시간이 다음 번호의 시작시간과 같거나 작다면 YES
-//                }
-//            }
-//        }
-//    }
-    for(i in 1..(listM.size)-2){
-        println(i)
-        if(listM[i][0]==listM[i+1][0]){ // 첫번재 방과 두번째 방이 같아
-            if(e<=listM[i+1][1]) { // 앞끝나는 시간이 뒤 시작 시간보다 작아
-                result.add("YES")
-            }
+    repeat(M) {
+        val (room, start, end) = readln().split(" ").map { it.toInt() }
+
+        if (lastEndTime.getOrDefault(room, 0) <= start) { // 번호별 마지막 시간 저장 기본 0 start보다 작거나 같다면
+            lastEndTime[room] = end // 룸번호로 마지막 시간 업데이트
+            result.add("YES") // 예약 가능 결과 리스트에 삽입
+        } else {
+            result.add("NO") // 예약 불가능 결과 리스트에 삽입
         }
     }
+
+    for (i in result.indices){
+        println(result[i]) // 결과 출력
+    }
 }
+
+//2 4
+//1 1 4
+//2 2 5
+//1 3 7
+//1 5 8
